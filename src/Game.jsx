@@ -21,27 +21,74 @@ const AnimalCharacter = ({ emotion, className, onClick }) => (
 );
 
 const CongratulationsMessage = ({ elapsedTime, onRestart }) => (
-  <div className="fixed inset-0 flex items-center justify-center z-50 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 bg-opacity-80">
+  <div className="fixed inset-0 flex items-center justify-center z-50 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 bg-opacity-80 overflow-hidden">
     <div className="text-center relative w-full h-full flex flex-col justify-center items-center">
-      <AnimalCharacter emotion="excited" className="w-40 h-40 animate-bounce mb-4" />
+      <div className="absolute inset-0">
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute animate-float"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 2}s`,
+              transform: `scale(${0.5 + Math.random() * 0.5})`
+            }}
+          >
+            <AnimalCharacter
+              emotion={Math.random() > 0.5 ? 'excited' : 'happy'}
+              className="w-20 h-20"
+            />
+          </div>
+        ))}
+      </div>
+      <div className="relative">
+        <AnimalCharacter
+          emotion="excited"
+          className="w-40 h-40 animate-bounce mb-4"
+        />
+      </div>
       <h2 className="text-6xl font-bold mb-4 text-yellow-300 
-                     transition-all duration-1000 transform scale-150 animate-pulse">
+                     transition-all duration-1000 transform scale-150 animate-pulse
+                     drop-shadow-[0_0_15px_rgba(255,255,255,0.7)]">
         おめでとう！
       </h2>
       <p className="text-4xl text-white 
-                    transition-all duration-1000 transform scale-125 animate-bounce">
+                    transition-all duration-1000 transform scale-125 animate-bounce
+                    drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">
         やったね！！
       </p>
-      <div className="mt-8 flex justify-center items-center space-x-2">
+      <div className="mt-8 flex justify-center items-center space-x-2
+                      bg-white/20 backdrop-blur-sm rounded-full px-6 py-3
+                      animate-pulse">
         <Timer className="w-6 h-6 text-white" />
         <p className="text-2xl text-white">クリアタイム: {elapsedTime}びょう</p>
       </div>
       <Button 
         onClick={onRestart} 
-        className="mt-12 bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-3 px-6 rounded-full text-xl transition-all duration-300 transform hover:scale-105"
+        className="mt-12 bg-yellow-400 hover:bg-yellow-500 text-black font-bold
+                   py-3 px-6 rounded-full text-xl transition-all duration-300
+                   transform hover:scale-105 animate-bounce-slow
+                   shadow-[0_0_15px_rgba(255,255,255,0.5)]"
       >
         もういっかいする
       </Button>
+      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2
+                      animate-rise opacity-50">
+        {[...Array(30)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute rounded-full bg-yellow-300"
+            style={{
+              width: `${Math.random() * 20 + 5}px`,
+              height: `${Math.random() * 20 + 5}px`,
+              left: `${Math.random() * 1000 - 500}px`,
+              animationDelay: `${Math.random() * 2}s`,
+              animationDuration: `${1 + Math.random() * 2}s`
+            }}
+          />
+        ))}
+      </div>
     </div>
   </div>
 );
@@ -62,6 +109,17 @@ const Game = () => {
   const [draggingBallId, setDraggingBallId] = useState(null);
   const [dragging, setDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [isEating, setIsEating] = useState(false);
+  const [eatingTimeout, setEatingTimeout] = useState(null);
+
+  // タイムアウトをクリアする
+  useEffect(() => {
+    return () => {
+      if (eatingTimeout) {
+        clearTimeout(eatingTimeout);
+      }
+    };
+  }, [eatingTimeout]);
 
   const colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'cyan'];
   const BALL_SIZE_PERCENT = 6;
@@ -206,31 +264,44 @@ const Game = () => {
       ) {
         playSound(440, 0.1);
 
+        // 既存のタイムアウトをクリア
+        if (eatingTimeout) {
+          clearTimeout(eatingTimeout);
+        }
+
+        // ボールを消す
         setBalls((prevBalls) =>
           prevBalls.filter((ball) => ball.id !== draggingBallId)
         );
 
-        setCharacterEmotion('eating');
-        
+        // スコアを更新
         setScore((prevScore) => {
           const newScore = prevScore + 5;
-          let newMessage = characterMessage;
-          if (newScore % 25 === 0) {
-            newMessage = 'すごい！ がんばってるね！';
-          } else if (newScore % 15 === 0) {
-            newMessage = 'そのちょうし！';
-          }
-          setCharacterMessage(newMessage);
           return newScore;
         });
 
-        setTimeout(() => {
-          setCharacterEmotion((prevScore) => {
-            if (prevScore % 25 === 0) return 'excited';
-            if (prevScore % 15 === 0) return 'happy';
-            return 'neutral';
-          });
-        }, 300);
+        // 食べるアニメーションを開始
+        setIsEating(true);
+        setCharacterEmotion('eating');
+
+        // 新しいタイムアウトを設定
+        const timeout = setTimeout(() => {
+          setIsEating(false);
+          const nextScore = score + 5;
+
+          // スコアに応じてメッセージと感情を更新
+          if (nextScore % 25 === 0) {
+            setCharacterMessage('すごい！ がんばってるね！');
+            setCharacterEmotion('excited');
+          } else if (nextScore % 15 === 0) {
+            setCharacterMessage('そのちょうし！');
+            setCharacterEmotion('happy');
+          } else {
+            setCharacterEmotion('neutral');
+          }
+        }, 500);
+
+        setEatingTimeout(timeout);
       } else {
         setBalls((prevBalls) =>
           prevBalls.map((ball) =>
@@ -253,11 +324,11 @@ const Game = () => {
       setCharacterMessage('やったね！ くりあだよ！');
       playSound(523.25, 0.5);
       setShowCongratulations(true);
-    } else if (balls.length <= 5) {
+    } else if (balls.length <= 5 && !isEating) {
       setCharacterEmotion('happy');
       setCharacterMessage('もうすこし！');
     }
-  }, [balls, score, playSound]);
+  }, [balls, score, playSound, isEating]);
 
   return (
     <div 
