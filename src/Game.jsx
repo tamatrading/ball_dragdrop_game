@@ -386,6 +386,14 @@ const Game = () => {
       <div className="absolute bottom-4 left-4 flex items-center">
         <div className="ml-4 text-lg font-bold">{characterMessage}</div>
       </div>
+      <div className="absolute bottom-4 right-4">
+        <Button
+          className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-full text-lg transition-all duration-300 transform hover:scale-105"
+          onClick={() => window.location.href = 'https://mouselesson.manabi-time.com'}
+        >
+          もどる
+        </Button>
+      </div>
       {showCongratulations && (
         <CongratulationsMessage elapsedTime={elapsedTime} onRestart={initializeGame} />
       )}
