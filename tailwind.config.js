@@ -6,8 +6,15 @@ export default {
   ],
   theme: {
     extend: {
+      keyframes: {
+        twinkle: {
+          '0%, 100%': { opacity: 0.25 },
+          '50%': { opacity: 1 },
+        },
+      },
       animation: {
         'bounce-slow': 'bounce 2s infinite',
+        'twinkle': 'twinkle 2.5s ease-in-out infinite',
       },
     },
   },

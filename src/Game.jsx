@@ -96,14 +96,12 @@ const CongratulationsMessage = ({ elapsedTime, onRestart }) => (
       >
         もういっかいする
       </Button>
-      <div className="absolute bottom-4 right-4">
-        <Button
-          className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-full text-lg transition-all duration-300 transform hover:scale-105"
-          onClick={() => window.location.href = 'https://mouselesson.manabi-time.com'}
-        >
-          もどる
-        </Button>
-      </div>
+      <Button
+        className="mt-4 bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-full text-lg transition-all duration-300 transform hover:scale-105"
+        onClick={() => window.location.href = 'https://mouselesson.manabi-time.com'}
+      >
+        もどる
+      </Button>
       <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2
                       animate-rise opacity-50">
         {[...Array(30)].map((_, i) => (
@@ -368,14 +366,14 @@ const Game = () => {
     >
       <div className="w-full max-w-2xl relative">
         <h1 className="text-2xl font-bold mb-4 text-center">ボールはこびゲーム</h1>
-        <div className="flex justify-center mb-6">
+        <div className="relative flex justify-center mb-6">
           <div className="bg-white rounded-full px-8 py-2 shadow-md text-4xl font-bold text-orange-500">
             てんすう {score}
           </div>
-        </div>
-        <div className="absolute top-4 right-4 flex items-center space-x-2 bg-white rounded-full px-4 py-2 shadow-md">
-          <Timer className="w-5 h-5 text-blue-500" />
-          <span className="text-lg font-bold text-blue-500">{elapsedTime}びょう</span>
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center space-x-2 bg-white rounded-full px-4 py-2 shadow-md">
+            <Timer className="w-5 h-5 text-blue-500" />
+            <span className="text-lg font-bold text-blue-500">{elapsedTime}びょう</span>
+          </div>
         </div>
 
         {showWarning && (
@@ -389,14 +387,19 @@ const Game = () => {
 
         <div
           ref={gameAreaRef}
-          className="w-full h-[420px] bg-gradient-to-b from-sky-200 to-sky-100 rounded-2xl relative overflow-hidden"
+          className="w-full h-[420px] bg-gradient-to-b from-slate-900 to-indigo-950 rounded-2xl relative overflow-hidden"
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
         >
-          <div className="absolute top-3 left-6 w-14 h-6 bg-white rounded-full opacity-80" aria-hidden="true" />
-          <div className="absolute top-5 left-11 w-10 h-5 bg-white rounded-full opacity-80" aria-hidden="true" />
-          <div className="absolute top-8 right-10 w-12 h-5 bg-white rounded-full opacity-70" aria-hidden="true" />
+          <div className="absolute top-4 left-8 w-1.5 h-1.5 bg-white rounded-full animate-twinkle" aria-hidden="true" />
+          <div className="absolute top-10 left-24 w-1 h-1 bg-white rounded-full animate-twinkle" style={{ animationDelay: '0.4s' }} aria-hidden="true" />
+          <div className="absolute top-6 left-1/2 w-1.5 h-1.5 bg-white rounded-full animate-twinkle" style={{ animationDelay: '0.8s' }} aria-hidden="true" />
+          <div className="absolute top-16 right-16 w-1 h-1 bg-white rounded-full animate-twinkle" style={{ animationDelay: '1.2s' }} aria-hidden="true" />
+          <div className="absolute top-8 right-6 w-1.5 h-1.5 bg-white rounded-full animate-twinkle" style={{ animationDelay: '0.2s' }} aria-hidden="true" />
+          <div className="absolute top-24 left-12 w-1 h-1 bg-white rounded-full animate-twinkle" style={{ animationDelay: '1.6s' }} aria-hidden="true" />
+          <div className="absolute top-20 right-1/3 w-1.5 h-1.5 bg-white rounded-full animate-twinkle" style={{ animationDelay: '0.6s' }} aria-hidden="true" />
+          <div className="absolute top-32 right-24 w-1 h-1 bg-white rounded-full animate-twinkle" style={{ animationDelay: '1s' }} aria-hidden="true" />
           <div
             className="absolute bottom-0 left-1/2 transform -translate-x-1/2"
             ref={characterRef}
@@ -414,15 +417,14 @@ const Game = () => {
         <div className="mt-4 flex justify-center">
           <div className="bg-white rounded-2xl px-4 py-2 shadow-md text-lg font-bold">{characterMessage}</div>
         </div>
-      </div>
-
-      <div className="fixed bottom-4 right-4">
-        <Button
-          className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-full text-lg transition-all duration-300 transform hover:scale-105"
-          onClick={() => window.location.href = 'https://mouselesson.manabi-time.com'}
-        >
-          もどる
-        </Button>
+        <div className="mt-6 flex justify-center">
+          <Button
+            className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-full text-lg transition-all duration-300 transform hover:scale-105"
+            onClick={() => window.location.href = 'https://mouselesson.manabi-time.com'}
+          >
+            もどる
+          </Button>
+        </div>
       </div>
       {showCongratulations && (
         <CongratulationsMessage elapsedTime={elapsedTime} onRestart={initializeGame} />
