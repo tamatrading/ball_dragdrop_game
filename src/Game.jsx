@@ -98,7 +98,7 @@ const CongratulationsMessage = ({ elapsedTime, onRestart }) => (
       </Button>
       <Button
         className="mt-4 bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-full text-lg transition-all duration-300 transform hover:scale-105"
-        onClick={() => window.location.href = 'https://mouselesson.manabi-time.com'}
+        onClick={() => window.location.href = 'https://manabi-time.com/mouse/'}
       >
         もどる
       </Button>
@@ -420,7 +420,7 @@ const Game = () => {
         <div className="mt-6 flex justify-center">
           <Button
             className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-full text-lg transition-all duration-300 transform hover:scale-105"
-            onClick={() => window.location.href = 'https://mouselesson.manabi-time.com'}
+            onClick={() => window.location.href = 'https://manabi-time.com/mouse/'}
           >
             もどる
           </Button>
